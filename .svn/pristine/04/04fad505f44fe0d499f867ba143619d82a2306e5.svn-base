@@ -1,0 +1,21 @@
+spring.profiles.active=sit
+#port
+server.port = 8081
+# context path
+server.servlet.context-path = /appBatch/
+server.servlet.session.timeout=PT30M
+
+spring.jmx.enabled= false
+
+#mybatis
+mybatis.mapperLocations = classpath*:mybatis/mappers/**/*.xml
+mybatis.configuration.mapUnderscoreToCamelCase=true
+
+#pagehelper
+pagehelper.helperDialect=mysql
+pagehelper.reasonable= true
+pagehelper.supportMethodsArguments=true
+pagehelper.params=count=countSql
+
+
+

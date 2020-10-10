@@ -1,0 +1,140 @@
+package com.tian.sakura.cdd.srv.web.shop;
+
+import java.util.List;
+
+import com.tian.sakura.cdd.common.annotation.NotAopLog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSON;
+import com.tian.sakura.cdd.common.annotation.CustomerApiAuth;
+import com.tian.sakura.cdd.common.dict.EUserType;
+import com.tian.sakura.cdd.db.domain.user.SUser;
+import com.tian.sakura.cdd.db.manage.product.vo.ShopRecommendPrd;
+import com.tian.sakura.cdd.srv.filter.LoginUserThreadLocal;
+import com.tian.sakura.cdd.srv.service.shop.CatalogService;
+import com.tian.sakura.cdd.srv.service.shop.CorpService;
+import com.tian.sakura.cdd.srv.service.shop.IndividualService;
+import com.tian.sakura.cdd.srv.service.shop.ShopProductService;
+import com.tian.sakura.cdd.srv.web.shop.dto.CatalogRspBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.CorpBasicReqBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.CorpEditReqBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.CorpReq;
+import com.tian.sakura.cdd.srv.web.shop.dto.CorpReqBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.CorpRspBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.IndividualBasicReq;
+import com.tian.sakura.cdd.srv.web.shop.dto.IndividualBasicReqBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.IndividualReq;
+import com.tian.sakura.cdd.srv.web.shop.dto.IndividualReqBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.IndividualRspBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.IsShopCompleteRspBody;
+import com.tian.sakura.cdd.srv.web.shop.dto.ShopAddressEditReq;
+import com.tian.sakura.cdd.srv.web.shop.dto.TestReq;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+/**
+ * 商铺相关
+ * @author liuhg
+ *
+ */
+@RestController
+@RequestMapping("shop")
+@Api("商铺管理")
+public class ShopController {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private IndividualService individualService;
+	@Autowired
+	private CorpService corpService;
+	@Autowired
+	private CatalogService catalogService;
+	@Autowired
+	private ShopProductService shopProductService;
+	
+	@ApiOperation("个人入驻基本信息录入")
+    @PostMapping("/indBasInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public IndividualRspBody individualBasicInfo( IndividualBasicReqBody req) {
+		SUser user = LoginUserThreadLocal.getLoginUser();
+		return individualService.individualBasicInfo(user.getId(), req);
+	}
+	
+	@ApiOperation("个人入驻身份证上传")
+    @PostMapping("/indIdCardInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	@NotAopLog
+	public IndividualRspBody individualIdCardInfo(IndividualReqBody reqBody) {
+		// 基本格式
+
+		return individualService.individualIdCardInfo(reqBody);
+	}
+	
+	@ApiOperation("企业入驻基本信息录入")
+    @PostMapping("/corpBasInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public CorpRspBody corplBasicInfo( CorpBasicReqBody req) {
+		SUser user = LoginUserThreadLocal.getLoginUser();
+		return corpService.corpBasicInfo(user.getId(), req);
+	}
+	@ApiOperation("企业入驻身份证上传")
+    @PostMapping("/corpCardInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public CorpRspBody corpIdCardInfo(CorpReqBody reqBody) {
+		return corpService.corpCardInfo(reqBody);
+	}
+	
+	@ApiOperation("个人/企业商铺完善资料")
+    @PostMapping("/editInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public CorpRspBody editInfo(CorpEditReqBody req) {
+		SUser user = LoginUserThreadLocal.getLoginUser();
+		return corpService.editInfo(user.getId(),req);
+	}
+	
+	@ApiOperation("个人/企业商铺查询")
+    @PostMapping("/qryShopInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public CorpRspBody qryShopInfo() {
+		SUser user = LoginUserThreadLocal.getLoginUser();
+		return corpService.qryShopInfo(user.getId());
+	}
+
+	@ApiOperation("查询经营类目字典")
+    @PostMapping("/qryShopCatInfo")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public List<CatalogRspBody> qryShopCatInfo() {
+		return catalogService.qryShopCatInfo();
+	}
+
+	@ApiOperation("店铺是否完善")
+    @PostMapping("/complete")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public IsShopCompleteRspBody isShopComplete() {
+		return corpService.isShopComplete(LoginUserThreadLocal.getLoginUser());
+	}
+	
+	@ApiOperation("测试接口")
+    @PostMapping("/test")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public void test(@RequestBody TestReq req) {
+		logger.info("===================="+JSON.toJSONString(req));
+		
+	}
+	@ApiOperation("推荐商铺")
+    @PostMapping("/recommendPrd")
+    @CustomerApiAuth(value = {EUserType.NORMAL_CUST})
+	public List<ShopRecommendPrd> shopRecommendPrd() {
+
+		return shopProductService.getShopRecommendPrd();
+	}
+	
+}

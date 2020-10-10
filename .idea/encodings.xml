@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/admin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/admin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/appBatch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/appBatch/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/appSrv/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/appSrv/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz-dao/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz-dao/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/biz-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cdd-wx/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cdd-wx/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/order-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

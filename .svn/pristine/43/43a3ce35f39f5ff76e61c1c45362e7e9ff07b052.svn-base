@@ -1,0 +1,23 @@
+spring.profiles.active=local
+#port
+server.port = 8083
+# context path
+server.servlet.context-path = /cddConsole/
+
+server.servlet.session.timeout=PT30M
+
+#mybatis
+mybatis.mapperLocations = classpath*:mybatis/mappers/**/*.xml
+
+#pagehelper
+pagehelper.helperDialect=mysql
+pagehelper.reasonable= true
+pagehelper.supportMethodsArguments=true
+pagehelper.params=count=countSql
+
+# prod  war not need bean
+serverEndpointExporterExists = true
+
+#default management secret
+default.secret = 123456
+

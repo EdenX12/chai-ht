@@ -1,0 +1,23 @@
+spring.profiles.active = sit
+#port
+server.port = 8081
+# context path
+server.servlet.context-path = /cddSrv/
+
+server.servlet.session.timeout=PT30M
+
+#mybatis
+mybatis.mapperLocations = classpath*:mybatis/mappers/**/*.xml
+mybatis.configuration.mapUnderscoreToCamelCase=true
+
+#pagehelper
+pagehelper.helperDialect=mysql
+pagehelper.reasonable= true
+#pagehelper.supportMethodsArguments=true
+pagehelper.params=count=countSql
+
+#file size
+spring.servlet.multipart.max-file-size = 50MB
+spring.servlet.multipart.max-request-size = 50MB
+
+

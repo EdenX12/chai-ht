@@ -1,0 +1,102 @@
+package com.tian.sakura.cdd.console.config;
+
+import com.tian.sakura.cdd.common.exception.BizRuntimeException;
+import com.tian.sakura.cdd.common.exception.SystemRuntimeException;
+import com.tian.sakura.cdd.common.web.CommonResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.util.Set;
+
+/**
+ * controller类异常统一拦截处理
+ *
+ * @author lvzg
+ * @Date
+ */
+@RestControllerAdvice
+public class CustomerExceptionControllerAdvice {
+
+    private transient Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final static String CHECK_01002 = "01002";
+
+    /**
+     * 全局异常捕捉处理
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    public CommonResult errorHandler(Exception ex) {
+        logger.error(ex.getMessage(),ex);
+        return CommonResult.fail();
+    }
+
+    /**
+     * 拦截捕捉自定义异常 GzhBizRuntimeException.class
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = BizRuntimeException.class)
+    public CommonResult myErrorHandler(BizRuntimeException ex) {
+        logger.error(ex.getMessage(),ex);
+        return CommonResult.fail(ex.getErrorCode(),ex.getMessage());
+    }
+
+    /**
+     * 拦截捕捉自定义异常 GzhSysRuntimeException.class
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(value = SystemRuntimeException.class)
+    public CommonResult myErrorHandler(SystemRuntimeException ex) {
+        logger.error(ex.getMessage(),ex);
+        return CommonResult.fail(ex.getErrorCode(),ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public CommonResult handleBindException(MethodArgumentNotValidException ex) {
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        logger.info("参数校验异常:{}({})", fieldError.getDefaultMessage(),fieldError.getField());
+
+        return CommonResult.fail(CHECK_01002,fieldError.getDefaultMessage());
+    }
+
+
+    @ExceptionHandler(BindException.class)
+    public CommonResult handleBindException(BindException ex) {
+        //校验 除了 requestbody 注解方式的参数校验 对应的 bindingresult 为 BeanPropertyBindingResult
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        logger.info("必填校验异常:{}({})", fieldError.getDefaultMessage(),fieldError.getField());
+
+        return CommonResult.fail(CHECK_01002,fieldError.getDefaultMessage());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public CommonResult handleBindException(ValidationException ex) {
+        StringBuilder message = new StringBuilder();
+        if (ex instanceof ConstraintViolationException) {
+            ConstraintViolationException exs = (ConstraintViolationException) ex;
+
+            Set<ConstraintViolation<?>> violations = exs.getConstraintViolations();
+
+            for (ConstraintViolation<?> item : violations) {
+                message.append(item.getMessage());
+            }
+            return CommonResult.fail(CHECK_01002,message.toString());
+        } else {
+            return CommonResult.fail(CHECK_01002,"参数校验失败，请检查数据。");
+        }
+
+
+
+    }
+}

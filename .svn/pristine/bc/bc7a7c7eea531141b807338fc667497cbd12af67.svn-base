@@ -1,0 +1,128 @@
+package com.tian.sakura.cdd.db.manage.product;
+
+import com.tian.sakura.cdd.common.entity.AbstractSingleManage;
+import com.tian.sakura.cdd.common.entity.AbstractSingleMapper;
+import com.tian.sakura.cdd.common.req.product.AdminProductReq;
+import com.tian.sakura.cdd.common.req.product.RecommendProductReq;
+import com.tian.sakura.cdd.common.resp.product.RecommendProductResp;
+import com.tian.sakura.cdd.db.dao.product.ProductMapper;
+import com.tian.sakura.cdd.db.dao.product.ProductRecommendMapper;
+import com.tian.sakura.cdd.db.domain.base.RecommendType;
+import com.tian.sakura.cdd.db.domain.product.Product;
+import com.tian.sakura.cdd.db.domain.product.ProductRecommend;
+import com.tian.sakura.cdd.db.manage.product.vo.ProductQueryVo;
+import com.tian.sakura.cdd.db.manage.product.vo.ProductRecommendQueryVo;
+import com.tian.sakura.cdd.db.manage.product.vo.ShopGroupProductVo;
+import com.tian.sakura.cdd.db.manage.product.vo.ShopProductVo;
+import com.tian.sakura.cdd.db.manage.product.vo.ShopRecommendPrd;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ProductManage extends AbstractSingleManage<Product, String> {
+
+    @Autowired
+    private ProductMapper productMapper;
+    @Autowired
+    private ProductRecommendMapper productRecommendMapper;
+
+    @Override
+    protected AbstractSingleMapper<Product, String> getSingleMapper() {
+        return productMapper;
+    }
+
+    public List<Product> getProductList(ProductQueryVo queryVo) {
+        return productMapper.getProductList(queryVo);
+    }
+
+    public List<Product> queryProductList(AdminProductReq adminProductReq) {
+        return productMapper.queryProductList(adminProductReq);
+    }
+
+    public List<Product> selectRecommendPrdList(ProductRecommendQueryVo queryVo) {
+        return productMapper.selectRecommendPrdList(queryVo);
+    }
+
+    public List<RecommendType> queryRecommendPrdList(ProductRecommendQueryVo queryVo) {
+        return productRecommendMapper.selectRecommendPrd(queryVo);
+    }
+
+    public List<Product> listUsableProduct(AdminProductReq adminProductReq) {
+        adminProductReq.setPageSize(null);
+        adminProductReq.setPageNum(null);
+        return productMapper.listUsableProduct(adminProductReq);
+    }
+
+    public List<RecommendProductResp> listRecommend(RecommendProductReq req) {
+        return productRecommendMapper.listRecommend(req);
+    }
+
+    public void insertRecommendProduct(ProductRecommend productRecommend) {
+        productRecommendMapper.insertSelective(productRecommend);
+    }
+
+    public void updateRecommendProduct(ProductRecommend productRecommend) {
+        productRecommendMapper.updateByPrimaryKeySelective(productRecommend);
+    }
+
+    public void deleteRecommendProduct(String id) {
+        productRecommendMapper.deleteByPrimaryKey(id);
+    }
+
+    //店铺查询商品列表
+    public List<ShopProductVo> getShopProductList(String shopId, Integer productStatus) {
+        return productMapper.getShopProductList(shopId, productStatus);
+    }
+
+    //店铺商品总数量
+    public Integer getShopProductCnt(Integer shopId) {
+        return productMapper.getShopProductCnt(shopId);
+    }
+
+    //店铺商品关注人数
+    public Integer getShopProductFollwCnt(Integer shopId) {
+        return productMapper.getShopProductFollwCnt(shopId);
+    }
+
+    //店铺正常/新品商品
+    public List<Product> getShopNormalProduct(ShopGroupProductVo pv) {
+        return productMapper.getShopNormalProduct(pv);
+    }
+
+    //查询组内商品
+    public List<Product> getGroupProduct(ShopGroupProductVo pv) {
+        return productMapper.getGroupProduct(pv);
+    }
+
+
+    public void updateTotalNumber(int productLine, String productId) {
+        productMapper.updateTotalNumber(productLine, productId);
+    }
+
+    //店铺上架商品数量
+    public int getShopProductOnCnt(String shopId) {
+        return productMapper.getShopProductOnCnt(shopId);
+    }
+
+    //商铺被关注的商品数量
+    public int getShopProductBeFollowedCnt(Integer shopId) {
+        return productMapper.getShopProductBeFollowedCnt(shopId);
+    }
+
+    public int selectCountByProductId(String productId,String recommendTypeId) {
+        return productRecommendMapper.selectCountByProductId(productId,recommendTypeId);
+    }
+    
+    //店铺商品模糊查询
+    public List<Product> searchShopProduct(ShopGroupProductVo pv){
+        return productMapper.searchShopProduct(pv);
+    }
+
+    //推荐商铺
+    public List<ShopRecommendPrd> shopRecommendPrd(Integer shopId){
+    	return productMapper.shopRecommendPrd(shopId);
+    }
+}

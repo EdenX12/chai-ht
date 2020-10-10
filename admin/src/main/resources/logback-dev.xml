@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="log.base" value="/logs/sakura"/>
+    <property name="log.name" value="admin"/>
+    <property name="pattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{THREAD_ID}] %-5level [%thread] %logger{80} :%msg%n"/>
+
+    <appender name="ROOT_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout name="StandardFormat" class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${pattern}</pattern>
+        </layout>
+    </appender>
+
+    <!--jdbcLog -->
+    <appender name="jdbcLog"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.base}/${log.name}-jdbc.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.base}/%d{yyyy-MM-dd}/${log.name}-jdbc-%i.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <TimeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>20MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- jdbc日志 -->
+    <logger name="com.tian.sakura.cdd.dao" level="DEBUG" additivity="false">
+        <appender-ref ref="jdbcLog"/>
+    </logger>
+
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.jdbc" level="DEBUG"/>
+    <logger name="org.springframework.scheduling" level="ERROR"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="org.mybatis.spring" level="INFO"/>
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="ROOT_CONSOLE"/>
+    </root>
+</configuration>
